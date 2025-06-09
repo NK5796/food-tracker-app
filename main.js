@@ -17,17 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset();
   });
 
-  window.sortTable = function (order) {
-    foodItems.sort((a, b) => {
-      if (a.name < b.name) return order === 'asc' ? -1 : 1;
-      if (a.name > b.name) return order === 'asc' ? 1 : -1;
-      return 0;
-    });
-    renderTable();
-  };
-
   function renderTable() {
     tableBody.innerHTML = "";
+
+    // 📌 常に賞味期限の早い順にソート
+    foodItems.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     foodItems.forEach(item => {
       const tr = document.createElement('tr');
