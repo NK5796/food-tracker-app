@@ -14,9 +14,7 @@ function getStatusClass(daysLeft) {
 }
 
 function renderItems() {
-  // ソート（期限が近い順）
   items.sort((a, b) => new Date(a.date) - new Date(b.date));
-
   itemList.innerHTML = "";
   items.forEach(item => {
     const daysLeft = calculateDaysLeft(item.date);
@@ -40,7 +38,6 @@ document.getElementById("addButton").addEventListener("click", () => {
   items.push({ name, date });
   renderItems();
 
-  // 入力リセット
   document.getElementById("nameInput").value = "";
   document.getElementById("dateInput").value = "";
 });
