@@ -1,4 +1,3 @@
-
 const list = document.getElementById('list');
 let items = JSON.parse(localStorage.getItem('foodItems') || '[]');
 
@@ -29,7 +28,13 @@ function renderList() {
   items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'item';
-    if (item.expiry < today) div.classList.add('expired');
+
+    if (item.expiry < today) {
+      div.classList.add('expired');
+    } else if (item.expiry === today) {
+      div.classList.add('due-today');
+    }
+
     div.innerHTML = `
       <strong>${item.name}</strong><br>
       消費期限: ${item.expiry}<br>
