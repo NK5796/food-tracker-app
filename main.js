@@ -1,49 +1,76 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const foodNameInput = document.getElementById("food-name");
-  const expirationInput = document.getElementById("expiration-date");
-  const addButton = document.getElementById("add-button");
-  const foodList = document.getElementById("food-list");
+  const nameInput = document.getElementById("name");
+  const dateInput = document.getElementById("date");
+  const addBtn = document.getElementById("add");
+  const list = document.getElementById("list");
 
-  let foods = JSON.parse(localStorage.getItem("foods")) || [];
-
-  function saveFoods() {
-    localStorage.setItem("foods", JSON.stringify(foods));
+  // 日付フォーマット関数（例：2025年6月8日）
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}年${month}月${day}日`;
   }
 
-  function renderFoods() {
-    foodList.innerHTML = "";
-    const sortedFoods = [...foods].sort((a, b) => new Date(a.expiration) - new Date(b.expiration));
+  // 日数の差を計算する関数
+  function calculateDaysLeft(expirationDate) {
+    const today = new Date();
+    const exp = new Date(expirationDate);
+    const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+    return diff;
+  }
 
-    sortedFoods.forEach((food) => {
+  // 食材リストを更新表示する関数
+  function updateList() {
+    list.innerHTML = "";
+    const items = JSON.parse(localStorage.getItem("ingredients") || "[]");
+
+    // 残日数でソート
+    items.sort((a, b) => new Date(a.expiration) - new Date(b.expiration));
+
+    items.forEach(item => {
       const li = document.createElement("li");
-      const daysLeft = Math.ceil((new Date(food.expiration) - new Date()) / (1000 * 60 * 60 * 24));
-      let badge = "";
+      const daysLeft = calculateDaysLeft(item.expiration);
+      const formattedDate = formatDate(item.expiration);
+
+      let label = "";
+      let status = "";
 
       if (daysLeft < 0) {
-        badge = '<span class="expired">期限切れ</span>';
+        label = "期限切れ";
+        status = "expired";
       } else if (daysLeft === 0) {
-        badge = '<span class="today">今日まで</span>';
+        label = "本日まで";
+        status = "today";
       } else {
-        badge = `<span class="days">あと${daysLeft}日</span>`;
+        label = `${daysLeft}日後`;
+        status = "days";
       }
 
-      li.innerHTML = `<strong>${food.name}</strong>（${food.expiration}） ${badge}`;
-      foodList.appendChild(li);
+      li.innerHTML = `
+        ${item.name}（期限：${formattedDate}）
+        <span class="${status}">${label}</span>
+      `;
+      list.appendChild(li);
     });
   }
 
-  addButton.addEventListener("click", () => {
-    const name = foodNameInput.value.trim();
-    const expiration = expirationInput.value;
+  // 食材を追加
+  addBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    const date = dateInput.value;
 
-    if (name && expiration) {
-      foods.push({ name, expiration });
-      saveFoods();
-      renderFoods();
-      foodNameInput.value = "";
-      expirationInput.value = "";
-    }
+    if (!name || !date) return;
+
+    const items = JSON.parse(localStorage.getItem("ingredients") || "[]");
+    items.push({ name, expiration: date });
+    localStorage.setItem("ingredients", JSON.stringify(items));
+
+    nameInput.value = "";
+    dateInput.value = "";
+    updateList();
   });
 
-  renderFoods();
+  updateList(); // 初回表示
 });
