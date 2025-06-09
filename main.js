@@ -21,8 +21,8 @@ function renderItems() {
     const div = document.createElement("div");
     div.className = `item ${getStatusClass(daysLeft)}`;
     div.innerHTML = `
-      <strong>${item.name}</strong>（期限: ${item.date}）<br>
-      <small>あと ${daysLeft < 0 ? '期限切れ' : `${daysLeft}日`} </small>
+      <strong>${item.name}</strong>（${item.date}）<br>
+      <small>${daysLeft < 0 ? '期限切れ' : `あと ${daysLeft} 日`}</small>
     `;
     itemList.appendChild(div);
   });
@@ -31,7 +31,7 @@ function renderItems() {
 const items = [];
 
 document.getElementById("addButton").addEventListener("click", () => {
-  const name = document.getElementById("nameInput").value;
+  const name = document.getElementById("nameInput").value.trim();
   const date = document.getElementById("dateInput").value;
   if (!name || !date) return;
 
