@@ -12,20 +12,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderFoods() {
     foodList.innerHTML = "";
-
-    // 日付順にソート
     const sortedFoods = [...foods].sort((a, b) => new Date(a.expiration) - new Date(b.expiration));
 
-    sortedFoods.forEach(food => {
+    sortedFoods.forEach((food) => {
       const li = document.createElement("li");
-
       const daysLeft = Math.ceil((new Date(food.expiration) - new Date()) / (1000 * 60 * 60 * 24));
       let badge = "";
 
       if (daysLeft < 0) {
-        badge = `<span class="expired">期限切れ</span>`;
+        badge = '<span class="expired">期限切れ</span>';
       } else if (daysLeft === 0) {
-        badge = `<span class="today">今日まで</span>`;
+        badge = '<span class="today">今日まで</span>';
       } else {
         badge = `<span class="days">あと${daysLeft}日</span>`;
       }
@@ -48,5 +45,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  renderFoods(); // 初回表示
+  renderFoods();
 });
