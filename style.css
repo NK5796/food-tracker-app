@@ -1,63 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 body {
-  background: #1a1a1a;
-  color: #fff;
-  font-family: sans-serif;
-  padding: 20px;
-  max-width: 600px;
+  background: #111827;
+  color: #e5e7eb;
+  font-family: 'Inter', sans-serif;
+  padding: 40px 20px;
+  max-width: 700px;
   margin: auto;
 }
+
 h1 {
   text-align: center;
-  color: #00bfff;
+  font-size: 2rem;
+  color: #38bdf8;
+  margin-bottom: 30px;
 }
+
 input, button {
-  padding: 10px;
-  margin: 5px 0;
-  font-size: 16px;
   width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background: #1f2937;
+  color: #e5e7eb;
   box-sizing: border-box;
+  transition: border 0.3s;
 }
+
+input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
 button {
-  background-color: #00bfff;
-  color: white;
+  background: #38bdf8;
   border: none;
   cursor: pointer;
+  color: #0f172a;
+  font-weight: bold;
 }
+
 button:hover {
-  background-color: #0099cc;
+  background: #0ea5e9;
 }
+
 ul {
   list-style: none;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 30px;
 }
+
 li {
-  background-color: #2a2a2a;
+  background: #1e293b;
   margin: 10px 0;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: transform 0.2s ease;
 }
+
+li:hover {
+  transform: scale(1.02);
+}
+
+.days, .expired, .today {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
 .days {
-  background-color: #0070f3;
+  background-color: #3b82f6;
   color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
 }
-.expired {
-  background-color: #ff3b3b;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
-}
+
 .today {
-  background-color: #ff9900;
+  background-color: #f59e0b;
   color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
+}
+
+.expired {
+  background-color: #ef4444;
+  color: white;
 }
