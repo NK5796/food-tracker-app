@@ -1,3 +1,5 @@
+let foodItems = [];
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('foodForm');
   const tableBody = document.getElementById('foodTableBody');
@@ -10,46 +12,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!name || !date) return;
 
-    addFoodItem(name, date);
+    foodItems.push({ name, date });
+    renderTable();
     form.reset();
   });
 
-  function addFoodItem(name, date) {
-    const tr = document.createElement('tr');
+  window.sortTable = function (order) {
+    foodItems.sort((a, b) => {
+      if (a.name < b.name) return order === 'asc' ? -1 : 1;
+      if (a.name > b.name) return order === 'asc' ? 1 : -1;
+      return 0;
+    });
+    renderTable();
+  };
 
-    const nameTd = document.createElement('td');
-    nameTd.textContent = name;
+  function renderTable() {
+    tableBody.innerHTML = "";
 
-    const dateTd = document.createElement('td');
-    dateTd.textContent = formatDateDisplay(date);
+    foodItems.forEach(item => {
+      const tr = document.createElement('tr');
 
-    const daysLeft = calculateDaysLeft(date);
-    const daysTd = document.createElement('td');
-    if (daysLeft < 0) {
-      daysTd.textContent = '期限切れ';
-      tr.classList.add('expired');
-    } else if (daysLeft === 0) {
-      daysTd.textContent = '本日まで';
-      tr.classList.add('today');
-    } else {
-      daysTd.textContent = `あと${daysLeft}日`;
-    }
+      const nameTd = document.createElement('td');
+      nameTd.textContent = item.name;
 
-    tr.appendChild(nameTd);
-    tr.appendChild(dateTd);
-    tr.appendChild(daysTd);
+      const dateTd = document.createElement('td');
+      dateTd.textContent = formatDateDisplay(item.date);
 
-    tableBody.appendChild(tr);
+      const daysLeft = calculateDaysLeft(item.date);
+      const daysTd = document.createElement('td');
+      if (daysLeft < 0) {
+        daysTd.textContent = '期限切れ';
+        tr.classList.add('expired');
+      } else if (daysLeft === 0) {
+        daysTd.textContent = '本日まで';
+        tr.classList.add('today');
+      } else {
+        daysTd.textContent = `あと${daysLeft}日`;
+      }
+
+      tr.appendChild(nameTd);
+      tr.appendChild(dateTd);
+      tr.appendChild(daysTd);
+      tableBody.appendChild(tr);
+    });
   }
 
   function calculateDaysLeft(exp) {
     const [y, m, d] = exp.split('-').map(Number);
-    const target = new Date(y, m - 1, d); // 月は0始まり
-
+    const target = new Date(y, m - 1, d);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     target.setHours(0, 0, 0, 0);
-
     const diff = target - today;
     return Math.floor(diff / (1000 * 60 * 60 * 24));
   }
