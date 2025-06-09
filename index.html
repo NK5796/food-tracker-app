@@ -8,14 +8,25 @@
 </head>
 <body>
   <div class="container">
-    <h1>🥕 食材管理</h1>
-    <div class="form">
-      <input type="text" id="name" placeholder="食材名を入力" />
-      <input type="date" id="date" />
-      <button id="add">追加</button>
-    </div>
-    <ul id="list"></ul>
+    <h1>🍅 食材管理アプリ</h1>
+    <form id="foodForm">
+      <input type="text" id="foodName" placeholder="食材名" required />
+      <input type="date" id="expiryDate" required />
+      <button type="submit">追加</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>食材名</th>
+          <th>賞味期限</th>
+          <th>残り日数</th>
+        </tr>
+      </thead>
+      <tbody id="foodTableBody"></tbody>
+    </table>
   </div>
+
   <script src="main.js"></script>
 </body>
 </html>
