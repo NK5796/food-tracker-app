@@ -1,62 +1,61 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const nameInput = document.getElementById("name");
-  const dateInput = document.getElementById("date");
-  const addBtn = document.getElementById("add");
-  const list = document.getElementById("list");
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('foodForm');
+  const tableBody = document.getElementById('foodTableBody');
 
-  function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('foodName').value.trim();
+    const date = document.getElementById('expiryDate').value;
+
+    if (!name || !date) return;
+
+    addFoodItem(name, date);
+    form.reset();
+  });
+
+  function addFoodItem(name, date) {
+    const tr = document.createElement('tr');
+
+    const nameTd = document.createElement('td');
+    nameTd.textContent = name;
+
+    const dateTd = document.createElement('td');
+    dateTd.textContent = formatDateDisplay(date);
+
+    const daysLeft = calculateDaysLeft(date);
+    const daysTd = document.createElement('td');
+    if (daysLeft < 0) {
+      daysTd.textContent = '期限切れ';
+      tr.classList.add('expired');
+    } else if (daysLeft === 0) {
+      daysTd.textContent = '本日まで';
+      tr.classList.add('today');
+    } else {
+      daysTd.textContent = `あと${daysLeft}日`;
+    }
+
+    tr.appendChild(nameTd);
+    tr.appendChild(dateTd);
+    tr.appendChild(daysTd);
+
+    tableBody.appendChild(tr);
   }
 
   function calculateDaysLeft(exp) {
+    const [y, m, d] = exp.split('-').map(Number);
+    const target = new Date(y, m - 1, d); // 月は0始まり
+
     const today = new Date();
-    const target = new Date(exp);
-    return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+    today.setHours(0, 0, 0, 0);
+    target.setHours(0, 0, 0, 0);
+
+    const diff = target - today;
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
   }
 
-  function updateList() {
-    list.innerHTML = "";
-    const items = JSON.parse(localStorage.getItem("ingredients") || "[]");
-    items.sort((a, b) => new Date(a.expiration) - new Date(b.expiration));
-
-    items.forEach(item => {
-      const li = document.createElement("li");
-      const daysLeft = calculateDaysLeft(item.expiration);
-      const dateFormatted = formatDate(item.expiration);
-
-      let label = "";
-      let status = "";
-
-      if (daysLeft < 0) {
-        label = "期限切れ";
-        status = "expired";
-      } else if (daysLeft === 0) {
-        label = "本日まで";
-        status = "today";
-      } else {
-        label = `${daysLeft}日後`;
-        status = "days";
-      }
-
-      li.innerHTML = `${item.name}（${dateFormatted}）<span class="${status}">${label}</span>`;
-      list.appendChild(li);
-    });
+  function formatDateDisplay(dateStr) {
+    const [y, m, d] = dateStr.split('-');
+    return `${y}年${m}月${d}日`;
   }
-
-  addBtn.addEventListener("click", () => {
-    const name = nameInput.value.trim();
-    const date = dateInput.value;
-    if (!name || !date) return;
-
-    const items = JSON.parse(localStorage.getItem("ingredients") || "[]");
-    items.push({ name, expiration: date });
-    localStorage.setItem("ingredients", JSON.stringify(items));
-
-    nameInput.value = "";
-    dateInput.value = "";
-    updateList();
-  });
-
-  updateList();
 });
