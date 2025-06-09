@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>食材管理アプリ</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -11,20 +11,10 @@
     <h1>🥕 食材管理アプリ</h1>
     <form id="foodForm">
       <input type="text" id="foodName" placeholder="食材名" required />
-      <input type="date" id="expiryDate" required />
+      <input type="date" id="foodDate" required />
       <button type="submit">追加</button>
     </form>
-
-    <table>
-      <thead>
-        <tr>
-          <th>食材名</th>
-          <th>賞味期限</th>
-          <th>残り日数</th>
-        </tr>
-      </thead>
-      <tbody id="foodTableBody"></tbody>
-    </table>
+    <div id="foodList" class="food-list"></div>
   </div>
   <script src="main.js"></script>
 </body>
