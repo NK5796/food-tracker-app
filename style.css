@@ -66,3 +66,29 @@ button:hover {
 .due-today {
   border-left-color: #ff9800;
 }
+.days {
+  background-color: #0070f3;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-size: 0.9em;
+}
+
+.expired {
+  background-color: #ff3b3b;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-size: 0.9em;
+}
+
+.today {
+  background-color: #ff9900;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-size: 0.9em;
+}
