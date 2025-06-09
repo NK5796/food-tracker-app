@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const addBtn = document.getElementById("add");
   const list = document.getElementById("list");
 
-  // 日付フォーマット関数（例：2025年6月8日）
   function formatDate(dateStr) {
     const date = new Date(dateStr);
     const year = date.getFullYear();
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${year}年${month}月${day}日`;
   }
 
-  // 日数の差を計算する関数
   function calculateDaysLeft(expirationDate) {
     const today = new Date();
     const exp = new Date(expirationDate);
@@ -21,12 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return diff;
   }
 
-  // 食材リストを更新表示する関数
   function updateList() {
     list.innerHTML = "";
     const items = JSON.parse(localStorage.getItem("ingredients") || "[]");
 
-    // 残日数でソート
     items.sort((a, b) => new Date(a.expiration) - new Date(b.expiration));
 
     items.forEach(item => {
@@ -48,15 +44,11 @@ document.addEventListener("DOMContentLoaded", () => {
         status = "days";
       }
 
-      li.innerHTML = `
-        ${item.name}（期限：${formattedDate}）
-        <span class="${status}">${label}</span>
-      `;
+      li.innerHTML = `${item.name}（期限：${formattedDate}） <span class="${status}">${label}</span>`;
       list.appendChild(li);
     });
   }
 
-  // 食材を追加
   addBtn.addEventListener("click", () => {
     const name = nameInput.value.trim();
     const date = dateInput.value;
@@ -72,5 +64,5 @@ document.addEventListener("DOMContentLoaded", () => {
     updateList();
   });
 
-  updateList(); // 初回表示
+  updateList();
 });
