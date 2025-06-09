@@ -1,0 +1,26 @@
+
+body {
+  font-family: sans-serif;
+  background: #f0f0f0;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+h1 {
+  text-align: center;
+}
+input, button {
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.item {
+  background: white;
+  padding: 10px;
+  margin-top: 10px;
+  border-left: 5px solid #4caf50;
+}
+.expired {
+  border-left: 5px solid #f44336;
+}
