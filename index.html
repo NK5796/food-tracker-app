@@ -8,17 +8,12 @@
 </head>
 <body>
   <div class="container">
-    <h1>🍅 食材管理アプリ</h1>
+    <h1>🥕 食材管理アプリ</h1>
     <form id="foodForm">
       <input type="text" id="foodName" placeholder="食材名" required />
       <input type="date" id="expiryDate" required />
       <button type="submit">追加</button>
     </form>
-
-    <div class="sort-buttons">
-      <button onclick="sortTable('asc')">▲ 食材名で昇順ソート</button>
-      <button onclick="sortTable('desc')">▼ 食材名で降順ソート</button>
-    </div>
 
     <table>
       <thead>
@@ -31,7 +26,6 @@
       <tbody id="foodTableBody"></tbody>
     </table>
   </div>
-
   <script src="main.js"></script>
 </body>
 </html>
