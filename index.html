@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet">
-  <title>食材管理アプリ（最小版）</title>
+  <title>食材管理アプリ</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🥦 食材管理アプリ</h1>
-
-  <input type="text" id="name" placeholder="食材名">
-  <input type="date" id="expiry" placeholder="消費期限">
-  <button onclick="addItem()">追加</button>
-
-  <div id="list"></div>
-
+  <div class="container">
+    <h1>🥕 食材管理アプリ</h1>
+    <div class="form">
+      <input id="nameInput" type="text" placeholder="食材名を入力" />
+      <input id="dateInput" type="date" />
+      <button id="addButton">追加</button>
+    </div>
+    <div id="itemList"></div>
+  </div>
   <script src="main.js"></script>
 </body>
 </html>
