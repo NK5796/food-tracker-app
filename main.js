@@ -6,29 +6,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function formatDate(dateStr) {
     const date = new Date(dateStr);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}年${month}月${day}日`;
+    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
   }
 
-  function calculateDaysLeft(expirationDate) {
+  function calculateDaysLeft(exp) {
     const today = new Date();
-    const exp = new Date(expirationDate);
-    const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
-    return diff;
+    const target = new Date(exp);
+    return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
   }
 
   function updateList() {
     list.innerHTML = "";
     const items = JSON.parse(localStorage.getItem("ingredients") || "[]");
-
     items.sort((a, b) => new Date(a.expiration) - new Date(b.expiration));
 
     items.forEach(item => {
       const li = document.createElement("li");
       const daysLeft = calculateDaysLeft(item.expiration);
-      const formattedDate = formatDate(item.expiration);
+      const dateFormatted = formatDate(item.expiration);
 
       let label = "";
       let status = "";
@@ -44,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         status = "days";
       }
 
-      li.innerHTML = `${item.name}（期限：${formattedDate}） <span class="${status}">${label}</span>`;
+      li.innerHTML = `${item.name}（${dateFormatted}）<span class="${status}">${label}</span>`;
       list.appendChild(li);
     });
   }
@@ -52,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   addBtn.addEventListener("click", () => {
     const name = nameInput.value.trim();
     const date = dateInput.value;
-
     if (!name || !date) return;
 
     const items = JSON.parse(localStorage.getItem("ingredients") || "[]");
