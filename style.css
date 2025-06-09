@@ -1,48 +1,54 @@
 body {
-  font-family: 'Helvetica Neue', sans-serif;
-  background: #121212;
-  color: #f0f0f0;
+  background: #0f0f0f;
+  font-family: 'Segoe UI', sans-serif;
+  color: #eee;
   margin: 0;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 480px;
+  margin: auto;
+  background: #1a1a1a;
   padding: 30px;
-  max-width: 600px;
-  margin-inline: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
 }
 
 h1 {
   text-align: center;
+  font-size: 1.8em;
+  margin-bottom: 24px;
   color: #ffffff;
-  margin-bottom: 20px;
 }
 
-input, button {
-  font-size: 16px;
-  padding: 10px;
-  margin: 5px 0;
+.form input,
+.form button {
   width: 100%;
-  box-sizing: border-box;
-  border-radius: 6px;
+  padding: 12px;
+  margin: 6px 0;
   border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
-input[type=\"text\"] {
-  background: #2a2a2a;
-  color: #fff;
-}
-
-input[type=\"date\"] {
-  background: #2a2a2a;
-  color: #fff;
+input[type="text"],
+input[type="date"] {
+  background: #2b2b2b;
+  color: #f0f0f0;
 }
 
 button {
   background: #0070f3;
   color: white;
+  font-weight: bold;
   cursor: pointer;
   transition: background 0.3s;
 }
 
 button:hover {
-  background: #005ec2;
+  background: #005ac1;
 }
 
 ul {
@@ -52,23 +58,27 @@ ul {
 }
 
 li {
-  background: #1e1e1e;
-  padding: 10px 15px;
+  background: #262626;
+  padding: 12px;
+  border-radius: 8px;
   margin-bottom: 10px;
-  border-radius: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 15px;
 }
 
 .expired {
-  color: #ff4c4c;
+  color: #ff5252;
+  font-weight: bold;
 }
 
 .today {
-  color: #ffae42;
+  color: #ffb74d;
+  font-weight: bold;
 }
 
 .days {
-  color: #32cd32;
+  color: #81c784;
+  font-weight: bold;
 }
