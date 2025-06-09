@@ -1,47 +1,46 @@
-const list = document.getElementById('list');
-let items = JSON.parse(localStorage.getItem('foodItems') || '[]');
+const itemList = document.getElementById("itemList");
 
-function saveAndRender() {
-  localStorage.setItem('foodItems', JSON.stringify(items));
-  renderList();
+function calculateDaysLeft(expiryDateStr) {
+  const today = new Date();
+  const expiryDate = new Date(expiryDateStr);
+  const diff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+  return diff;
 }
 
-function addItem() {
-  const name = document.getElementById('name').value;
-  const expiry = document.getElementById('expiry').value;
-  if (!name || !expiry) return alert('両方入力してください');
-  items.push({ name, expiry });
-  document.getElementById('name').value = '';
-  document.getElementById('expiry').value = '';
-  saveAndRender();
+function getStatusClass(daysLeft) {
+  if (daysLeft < 0) return "expired";
+  if (daysLeft === 0) return "due-today";
+  return "";
 }
 
-function deleteItem(index) {
-  items.splice(index, 1);
-  saveAndRender();
-}
+function renderItems() {
+  // ソート（期限が近い順）
+  items.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-function renderList() {
-  list.innerHTML = '';
-  items.sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
-  const today = new Date().toISOString().split('T')[0];
-  items.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'item';
-
-    if (item.expiry < today) {
-      div.classList.add('expired');
-    } else if (item.expiry === today) {
-      div.classList.add('due-today');
-    }
-
+  itemList.innerHTML = "";
+  items.forEach(item => {
+    const daysLeft = calculateDaysLeft(item.date);
+    const div = document.createElement("div");
+    div.className = `item ${getStatusClass(daysLeft)}`;
     div.innerHTML = `
-      <strong>${item.name}</strong><br>
-      消費期限: ${item.expiry}<br>
-      <button onclick="deleteItem(${i})">削除</button>
+      <strong>${item.name}</strong>（期限: ${item.date}）<br>
+      <small>あと ${daysLeft < 0 ? '期限切れ' : `${daysLeft}日`} </small>
     `;
-    list.appendChild(div);
+    itemList.appendChild(div);
   });
 }
 
-renderList();
+const items = [];
+
+document.getElementById("addButton").addEventListener("click", () => {
+  const name = document.getElementById("nameInput").value;
+  const date = document.getElementById("dateInput").value;
+  if (!name || !date) return;
+
+  items.push({ name, date });
+  renderItems();
+
+  // 入力リセット
+  document.getElementById("nameInput").value = "";
+  document.getElementById("dateInput").value = "";
+});
