@@ -2,19 +2,19 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>食材管理アプリ</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>🥕 食材管理アプリ</h1>
+    <h1>🍅 食材管理アプリ</h1>
     <form id="foodForm">
       <input type="text" id="foodName" placeholder="食材名" required />
       <input type="date" id="foodDate" required />
       <button type="submit">追加</button>
     </form>
-    <div id="foodList" class="food-list"></div>
+    <ul id="foodList"></ul>
   </div>
   <script src="main.js"></script>
 </body>
