@@ -78,12 +78,14 @@ li {
   background-color: #c62828;
   color: white;
   border: none;
-  padding: 6px 12px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
+  vertical-align: middle;
 }
 
 .delete-btn:hover {
-  background-color: #b71c1c;
+  background-color: #a50000;
 }
+
