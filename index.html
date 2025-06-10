@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaveEats - 食材管理アプリ</title>
+  <title>SaveEats | 食材管理アプリ</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="container">
-    <h1>🥗 SaveEats</h1>
-    <p>食材の賞味期限を簡単に管理しよう。</p>
-    <form id="food-form">
-      <input type="text" id="food-name" placeholder="食材名" required />
-      <input type="date" id="food-date" required />
+    <h1>SaveEats</h1>
+    <form id="item-form">
+      <input type="text" id="name" placeholder="食品名" required />
+      <input type="date" id="date" required />
       <button type="submit">追加</button>
     </form>
-    <ul id="food-list"></ul>
+    <ul id="item-list"></ul>
   </div>
   <script src="main.js"></script>
 </body>
