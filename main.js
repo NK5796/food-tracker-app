@@ -1,85 +1,81 @@
-// main.js
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('item-form');
+  const foodInput = document.getElementById('food');
+  const dateInput = document.getElementById('date');
+  const list = document.getElementById('item-list');
 
-const form = document.querySelector("form");
-const itemNameInput = document.getElementById("item-name");
-const itemDateInput = document.getElementById("item-date");
-const itemList = document.getElementById("item-list");
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const food = foodInput.value.trim();
+    const date = dateInput.value;
+    if (!food || !date) return;
 
-// 保存データの読み込み
-window.addEventListener("DOMContentLoaded", loadItemsFromStorage);
-
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const name = itemNameInput.value.trim();
-  const date = itemDateInput.value;
-
-  if (!name || !date) return;
-
-  const item = { name, date };
-  addItemToDOM(item);
-  saveItemToStorage(item);
-
-  itemNameInput.value = "";
-  itemDateInput.value = "";
-});
-
-function addItemToDOM(item) {
-  const li = document.createElement("li");
-  li.classList.add("item");
-
-  const today = new Date();
-  const dueDate = new Date(item.date);
-  const diffTime = dueDate.getTime() - today.setHours(0, 0, 0, 0);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  let statusText = "";
-  if (diffDays < 0) {
-    statusText = "期限切れ";
-    li.classList.add("expired");
-  } else if (diffDays === 0) {
-    statusText = "本日まで";
-  } else {
-    statusText = `あと${diffDays}日`;
-  }
-
-  li.innerHTML = `
-    <span class="item-name">${item.name}</span>
-    <span class="item-date">（${formatDate(item.date)}：${statusText}）</span>
-    <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
-  `;
-
-  li.querySelector(".delete-btn").addEventListener("click", function () {
-    li.remove();
-    deleteItemFromStorage(item);
+    const item = { food, date };
+    addItemToDOM(item);
+    saveItemToStorage(item);
+    form.reset();
   });
 
-  itemList.appendChild(li);
-}
+  function addItemToDOM(item) {
+    const li = document.createElement('li');
+    li.className = 'item';
 
-function formatDate(dateStr) {
-  const [year, month, day] = dateStr.split("-");
-  return `${year}年${month}月${day}日`;
-}
+    const foodSpan = document.createElement('span');
+    foodSpan.textContent = item.food;
 
-function saveItemToStorage(item) {
-  const items = getItemsFromStorage();
-  items.push(item);
-  localStorage.setItem("foodItems", JSON.stringify(items));
-}
+    const status = getStatus(item.date);
+    const dateSpan = document.createElement('span');
+    dateSpan.className = 'date';
+    dateSpan.textContent = `${formatDate(item.date)}（${status}）`;
 
-function getItemsFromStorage() {
-  return JSON.parse(localStorage.getItem("foodItems")) || [];
-}
+    const deleteBtn = document.createElement('button');
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.onclick = () => {
+      li.remove();
+      deleteItemFromStorage(item);
+    };
 
-function loadItemsFromStorage() {
-  const items = getItemsFromStorage();
-  items.sort((a, b) => new Date(a.date) - new Date(b.date));
-  items.forEach(addItemToDOM);
-}
+    li.appendChild(foodSpan);
+    li.appendChild(dateSpan);
+    li.appendChild(deleteBtn);
+    list.appendChild(li);
+  }
 
-function deleteItemFromStorage(itemToDelete) {
-  let items = getItemsFromStorage();
-  items = items.filter(item => !(item.name === itemToDelete.name && item.date === itemToDelete.date));
-  localStorage.setItem("foodItems", JSON.stringify(items));
-}
+  function formatDate(date) {
+    if (!date || !date.includes("-")) return "不明な日付";
+    const [year, month, day] = date.split("-");
+    return `${year}年${month}月${day}日`;
+  }
+
+  function getStatus(dateStr) {
+    const today = new Date();
+    const target = new Date(dateStr);
+    const diff = Math.floor((target - today) / (1000 * 60 * 60 * 24));
+
+    if (diff < 0) return "期限切れ";
+    if (diff === 0) return "本日まで";
+    return `あと${diff}日`;
+  }
+
+  function saveItemToStorage(item) {
+    const items = JSON.parse(localStorage.getItem('items')) || [];
+    items.push(item);
+    localStorage.setItem('items', JSON.stringify(items));
+  }
+
+  function deleteItemFromStorage(item) {
+    let items = JSON.parse(localStorage.getItem('items')) || [];
+    items = items.filter(i => !(i.food === item.food && i.date === item.date));
+    localStorage.setItem('items', JSON.stringify(items));
+  }
+
+  function loadItemsFromStorage() {
+    const items = JSON.parse(localStorage.getItem('items')) || [];
+    // 期限が近い順に並べる
+    items.sort((a, b) => new Date(a.date) - new Date(b.date));
+    items.forEach(addItemToDOM);
+  }
+
+  loadItemsFromStorage();
+});
