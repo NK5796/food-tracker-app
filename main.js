@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const today = new Date();
     const expDate = new Date(expiry);
+    expDate.setHours(0, 0, 0, 0); // ← 時間差によるズレを防止
+    today.setHours(0, 0, 0, 0);
     const diff = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
     let label = "";
 
@@ -34,7 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <button class="delete-btn" title="削除"><i class="fas fa-trash-alt"></i></button>
     `;
 
-    li.querySelector(".delete-btn").addEventListener("click", () => {
+    const deleteBtn = li.querySelector(".delete-btn");
+    deleteBtn.addEventListener("click", () => {
       li.remove();
     });
 
