@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const remaining = getRemainingDays(date);
     const formattedDate = formatDate(date);
 
+    const info = document.createElement("div");
+    info.innerHTML = `<strong>${name}</strong> - ${formattedDate}`;
+
     const status = document.createElement("span");
     status.className = "status";
     status.textContent =
@@ -28,8 +31,17 @@ document.addEventListener("DOMContentLoaded", () => {
         ? "本日まで"
         : `あと${remaining}日`;
 
-    li.innerHTML = `<strong>${name}</strong> - ${formattedDate}`;
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "削除";
+    delBtn.className = "delete-btn";
+    delBtn.onclick = () => {
+      li.remove();
+      saveData();
+    };
+
+    li.appendChild(info);
     li.appendChild(status);
+    li.appendChild(delBtn);
     list.appendChild(li);
   }
 
