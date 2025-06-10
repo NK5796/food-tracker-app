@@ -1,78 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("food-form");
-  const foodList = document.getElementById("food-list");
+  const form = document.getElementById("foodForm");
+  const foodList = document.getElementById("foodList");
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+    const name = document.getElementById("foodName").value.trim();
+    const date = document.getElementById("expiryDate").value;
 
-    const name = document.getElementById("food-name").value.trim();
-    const date = document.getElementById("expiration-date").value;
-
-    if (!name || !date) return;
-
-    addFoodItem(name, date);
-    form.reset();
+    if (name && date) {
+      addFoodItem(name, date);
+      form.reset();
+    }
   });
 
-  function addFoodItem(name, date) {
+  function addFoodItem(name, expiry) {
     const li = document.createElement("li");
-    const statusSpan = document.createElement("span");
-    const deleteButton = document.createElement("button");
 
-    const daysRemaining = getDaysRemaining(date);
+    const today = new Date();
+    const expDate = new Date(expiry);
+    const diff = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+    let label = "";
 
-    if (daysRemaining < 0) {
-      statusSpan.textContent = `期限切れ（${formatDate(date)}）`;
-      statusSpan.classList.add("expired");
-    } else if (daysRemaining === 0) {
-      statusSpan.textContent = `本日まで（${formatDate(date)}）`;
-      statusSpan.classList.add("today");
+    if (diff < 0) {
+      label = `<span class="expired">（期限切れ）</span>`;
+    } else if (diff === 0) {
+      label = `<span class="due-today">（本日まで）</span>`;
     } else {
-      statusSpan.textContent = `あと${daysRemaining}日（${formatDate(date)}）`;
+      label = `（あと${diff}日）`;
     }
 
-    deleteButton.className = "delete-btn";
-    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-    deleteButton.onclick = () => li.remove();
+    li.innerHTML = `
+      ${name} - ${expiry.replace(/-/g, "/")} ${label}
+      <button class="delete-btn" title="削除"><i class="fas fa-trash-alt"></i></button>
+    `;
 
-    li.innerHTML = `<strong>${name}</strong><br>`;
-    li.appendChild(statusSpan);
-    li.appendChild(deleteButton);
-
-    foodList.appendChild(li);
-    sortFoodList();
-  }
-
-  function getDaysRemaining(dateStr) {
-    const today = new Date();
-    const expiration = new Date(dateStr);
-    today.setHours(0, 0, 0, 0);
-    expiration.setHours(0, 0, 0, 0);
-
-    const diffTime = expiration - today;
-    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  }
-
-  function formatDate(dateStr) {
-    const d = new Date(dateStr);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}/${mm}/${dd}`;
-  }
-
-  function sortFoodList() {
-    const items = Array.from(foodList.children);
-    items.sort((a, b) => {
-      const textA = a.querySelector("span").textContent;
-      const textB = b.querySelector("span").textContent;
-      const matchA = textA.match(/(\d{4}\/\d{2}\/\d{2})/);
-      const matchB = textB.match(/(\d{4}\/\d{2}\/\d{2})/);
-      const dateA = new Date(matchA ? matchA[1] : "");
-      const dateB = new Date(matchB ? matchB[1] : "");
-      return dateA - dateB;
+    li.querySelector(".delete-btn").addEventListener("click", () => {
+      li.remove();
     });
 
-    items.forEach(item => foodList.appendChild(item));
+    foodList.appendChild(li);
   }
 });
