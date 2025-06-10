@@ -2,20 +2,21 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SaveEats - 食材管理アプリ</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="container">
-    <h1>🥫 SaveEats</h1>
-    <form id="foodForm">
-      <input type="text" id="foodName" placeholder="食品名" required />
-      <input type="date" id="expiryDate" required />
+    <h1>🥗 SaveEats</h1>
+    <p>食材の賞味期限を簡単に管理しよう。</p>
+    <form id="food-form">
+      <input type="text" id="food-name" placeholder="食材名" required />
+      <input type="date" id="food-date" required />
       <button type="submit">追加</button>
     </form>
-    <ul id="foodList"></ul>
+    <ul id="food-list"></ul>
   </div>
   <script src="main.js"></script>
 </body>
