@@ -1,78 +1,92 @@
 body {
-  font-family: 'Arial', sans-serif;
   margin: 0;
-  background-color: #121212;
+  font-family: sans-serif;
+  background: #1f1f1f;
   color: #fff;
 }
 
 .container {
-  max-width: 500px;
-  margin: 50px auto;
-  background: #1e1e1e;
+  max-width: 600px;
+  margin: 40px auto;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  background: #2a2a2a;
+  border-radius: 10px;
 }
 
 h1 {
   text-align: center;
-  color: #90caf9;
+  margin-bottom: 20px;
+  color: #00d2ff;
 }
 
 form {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
 }
 
-form input, form button {
+input, button {
   padding: 10px;
-  font-size: 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 16px;
 }
 
-form input {
+input[type="text"], input[type="date"] {
   flex: 1;
-  background: #2c2c2c;
+  background: #444;
   color: #fff;
 }
 
-form button {
-  background-color: #007acc;
-  color: white;
+button[type="submit"] {
+  background: #00d2ff;
+  color: #000;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
-form button:hover {
-  background-color: #005f99;
+button[type="submit"]:hover {
+  background: #00aacc;
 }
 
 ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
 }
 
 li {
-  background: #2c2c2c;
+  background: #3a3a3a;
   margin-bottom: 10px;
-  padding: 10px;
-  border-left: 5px solid #007acc;
+  padding: 10px 14px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.status {
-  font-size: 14px;
-  color: #ccc;
+.expired {
+  color: red;
 }
 
-button.delete {
-  background: none;
+.due-today {
+  color: orange;
+}
+
+.delete-btn {
+  background: #ff4d4d;
   border: none;
-  color: #ff6b6b;
-  font-size: 18px;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
 }
