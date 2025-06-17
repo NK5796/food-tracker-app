@@ -1,22 +1,23 @@
 body {
-  margin: 0;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
   font-family: sans-serif;
-  background: #1f1f1f;
-  color: #fff;
+  margin: 0;
+  padding: 0;
 }
 
-.container {
-  max-width: 600px;
+.app-container {
+  max-width: 500px;
   margin: 40px auto;
   padding: 20px;
-  background: #2a2a2a;
+  background-color: #2b2b2b;
   border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #00d2ff;
 }
 
 form {
@@ -25,68 +26,60 @@ form {
   margin-bottom: 20px;
 }
 
-input, button {
+form input, form button {
   padding: 10px;
-  border: none;
-  border-radius: 6px;
   font-size: 16px;
+  border-radius: 6px;
+  border: none;
 }
 
-input[type="text"], input[type="date"] {
+form input[type="text"], form input[type="date"] {
   flex: 1;
-  background: #444;
-  color: #fff;
+  background: #3a3a3a;
+  color: white;
 }
 
-button[type="submit"] {
-  background: #00d2ff;
-  color: #000;
+form button {
+  background-color: #4caf50;
+  color: white;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
-button[type="submit"]:hover {
-  background: #00aacc;
-}
-
-ul {
+#item-list {
   list-style: none;
   padding: 0;
 }
 
-li {
-  background: #3a3a3a;
-  margin-bottom: 10px;
-  padding: 10px 14px;
-  border-radius: 8px;
+.item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #3a3a3a;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.badge {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: #ff9800;
+  color: black;
 }
 
 .expired {
-  color: red;
-}
-
-.due-today {
-  color: orange;
-}
-
-.delete-btn {
-  background: #ff4d4d;
-  border: none;
+  background-color: #e53935;
   color: white;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
 }
 
-.delete-btn:hover {
-  background: #cc0000;
+button.delete-btn {
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  margin-left: 10px;
 }
