@@ -2,40 +2,40 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SaveEats - 食材管理アプリ</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>🥕 SaveEats</h1>
+    <h1>SaveEats</h1>
   </header>
-
   <main>
-    <form id="itemForm">
-      <input type="text" id="name" placeholder="食材名" required>
-      <input type="date" id="date" required>
-      <select id="category">
+    <form id="item-form">
+      <input type="text" id="item-name" placeholder="食品名" required>
+      <input type="date" id="item-date" required>
+      <select id="item-category">
         <option value="野菜">野菜</option>
         <option value="肉">肉</option>
         <option value="魚">魚</option>
+        <option value="乳製品">乳製品</option>
         <option value="その他">その他</option>
       </select>
       <button type="submit">追加</button>
     </form>
 
-    <div class="sort-options">
-      <label>並び替え:
-        <select id="sort">
-          <option value="date">期限順</option>
-          <option value="category">カテゴリ順</option>
-        </select>
-      </label>
+    <div id="notification"></div>
+
+    <div id="sort-options">
+      <label for="sort-select">並び替え：</label>
+      <select id="sort-select">
+        <option value="date">期限が近い順</option>
+        <option value="category">カテゴリ順</option>
+      </select>
     </div>
 
-    <ul id="itemList"></ul>
+    <ul id="item-list"></ul>
   </main>
-
   <script src="main.js"></script>
 </body>
 </html>
