@@ -1,42 +1,30 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SaveEats - 食材管理アプリ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaveEats- 食材管理アプリ</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>🍱 SaveEats</h1>
+    <h1>SaveEats</h1>
 
     <form id="item-form">
-      <input type="text" id="name" placeholder="食品名" required />
+      <input type="text" id="name" placeholder="商品名" required />
       <input type="date" id="date" required />
-      <select id="category" required>
-        <option value="" disabled selected>カテゴリを選択</option>
+      <select id="category">
         <option value="野菜">野菜</option>
         <option value="肉">肉</option>
         <option value="魚">魚</option>
-        <option value="冷凍">冷凍</option>
-        <option value="その他">その他</option>
+        <option value="一般">一般</option>
       </select>
       <button type="submit">追加</button>
     </form>
 
-    <div class="category-editor">
-      <input type="text" id="new-category-name" placeholder="カテゴリ追加" />
-      <button id="add-category">＋</button>
-      <button id="remove-category">－</button>
-    </div>
-
-    <div class="sort-bar">
-      <span>期限順に表示中</span>
-    </div>
-
     <ul id="item-list"></ul>
   </div>
-
   <script src="main.js"></script>
 </body>
 </html>
