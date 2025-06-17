@@ -33,11 +33,24 @@ document.addEventListener("DOMContentLoaded", () => {
   function getStatus(dateStr) {
     const today = new Date();
     const target = new Date(dateStr);
-    const diff = (target - today) / (1000 * 60 * 60 * 24);
-    if (diff < 0) return "expired";
-    if (diff < 1) return "today";
-    if (diff < 3) return "soon";
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const targetMidnight = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+    const diffDays = Math.floor((targetMidnight - todayMidnight) / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return "expired";
+    if (diffDays === 0) return "today";
+    if (diffDays <= 2) return "soon";
     return "";
+  }
+
+  function getRemainingText(dateStr) {
+    const today = new Date();
+    const target = new Date(dateStr);
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const targetMidnight = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+    const diff = Math.floor((targetMidnight - todayMidnight) / (1000 * 60 * 60 * 24));
+    if (diff < 0) return "期限切れ";
+    if (diff === 0) return "本日まで";
+    return `あと${diff}日`;
   }
 
   function notifyIfNearExpiry(item) {
@@ -75,8 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
       name.textContent = `${item.name}（${item.category}）`;
 
       const date = document.createElement("span");
-      date.textContent = `期限: ${formatDate(item.date)}`;
       const status = getStatus(item.date);
+      date.textContent = `期限: ${formatDate(item.date)}（${getRemainingText(item.date)}）`;
       if (status) date.classList.add(status);
 
       info.appendChild(name);
