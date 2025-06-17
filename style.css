@@ -1,86 +1,106 @@
 body {
-  font-family: sans-serif;
-  background: #1f1f1f;
-  color: #eee;
+  font-family: "Arial", sans-serif;
+  background-color: #1e1e1e;
+  color: #fff;
   margin: 0;
   padding: 20px;
 }
 
-header h1 {
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+h1 {
   text-align: center;
-  color: #ffcc00;
+  color: #f0f0f0;
 }
 
 form {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 20px;
-  justify-content: center;
+  margin-bottom: 15px;
 }
 
-form input, form select, form button {
+form input,
+form select,
+form button {
+  flex: 1 1 100%;
   padding: 10px;
-  font-size: 1em;
+  font-size: 16px;
   border-radius: 6px;
   border: none;
-  background: #333;
-  color: white;
 }
 
 form button {
-  background: #ff9900;
+  background-color: #4caf50;
+  color: white;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
 form button:hover {
-  background: #ffcc00;
+  background-color: #45a049;
 }
 
-.sort-options {
-  text-align: center;
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
   margin-bottom: 20px;
 }
 
-ul#itemList {
-  list-style: none;
-  padding: 0;
-  max-width: 600px;
-  margin: auto;
+.controls input,
+.controls select {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-.item {
+ul#foodList {
+  list-style: none;
+  padding: 0;
+}
+
+.food-item {
+  background-color: #2c2c2c;
+  border-left: 5px solid #4caf50;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2c2c2c;
-  margin: 10px 0;
-  padding: 12px;
-  border-radius: 8px;
 }
 
-.item-info {
-  flex: 1;
+.food-info {
+  flex-grow: 1;
 }
 
-.item-category {
-  font-size: 0.9em;
-  opacity: 0.7;
+.food-expiry {
+  font-size: 14px;
+  color: #ccc;
 }
 
-.item-expire {
-  font-weight: bold;
+.expired {
+  color: #ff6b6b;
 }
 
-button.delete {
-  background: #ff4444;
-  color: white;
+.due-today {
+  color: #ffd700;
+}
+
+.delete-btn {
+  background-color: transparent;
   border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 16px;
+  color: #fff;
+  font-size: 18px;
+  margin-left: 10px;
   cursor: pointer;
-  margin-left: 15px;
+}
+
+.delete-btn:hover {
+  color: #ff5252;
 }
