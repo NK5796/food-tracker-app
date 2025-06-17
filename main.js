@@ -1,94 +1,130 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const foodForm = document.getElementById("foodForm");
-  const foodList = document.getElementById("foodList");
-  const searchInput = document.getElementById("searchInput");
-  const sortSelect = document.getElementById("sortSelect");
+  const form = document.getElementById("food-form");
+  const nameInput = document.getElementById("food-name");
+  const dateInput = document.getElementById("food-date");
+  const categoryInput = document.getElementById("food-category");
+  const sortOption = document.getElementById("sort-option");
 
-  foodForm.addEventListener("submit", (e) => {
+  form.addEventListener("submit", e => {
     e.preventDefault();
-
-    const name = document.getElementById("foodName").value;
-    const date = document.getElementById("expiryDate").value;
-    const category = document.getElementById("category").value;
-
-    if (!name || !date) return;
-
-    const item = { name, date, category };
-    saveItem(item);
-    foodForm.reset();
-    renderItems();
+    const food = {
+      name: nameInput.value,
+      date: dateInput.value,
+      category: categoryInput.value
+    };
+    saveItem(food);
+    form.reset();
   });
 
-  searchInput.addEventListener("input", renderItems);
-  sortSelect.addEventListener("change", renderItems);
+  sortOption.addEventListener("change", renderItems);
+  loadItemsFromStorage();
+  requestNotificationPermission();
+});
 
-  function saveItem(item) {
-    const items = getItems();
-    items.push(item);
-    localStorage.setItem("foodItems", JSON.stringify(items));
+function saveItem(item) {
+  const items = getItems();
+  items.push(item);
+  localStorage.setItem("foods", JSON.stringify(items));
+  renderItems();
+}
+
+function getItems() {
+  return JSON.parse(localStorage.getItem("foods")) || [];
+}
+
+function renderItems() {
+  const list = document.getElementById("food-list");
+  const items = getItems();
+  const sortValue = document.getElementById("sort-option").value;
+
+  if (sortValue === "期限順") {
+    items.sort((a, b) => new Date(a.date) - new Date(b.date));
+  } else if (sortValue === "カテゴリ順") {
+    items.sort((a, b) => a.category.localeCompare(b.category));
   }
 
-  function getItems() {
-    return JSON.parse(localStorage.getItem("foodItems")) || [];
-  }
+  list.innerHTML = "";
+  items.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.className = "food-item";
 
-  function renderItems() {
-    const items = getItems();
+    const info = document.createElement("div");
+    info.className = "food-info";
 
-    const filtered = items
-      .filter((item) =>
-        item.name.toLowerCase().includes(searchInput.value.toLowerCase())
-      )
-      .sort((a, b) => new Date(a.date) - new Date(b.date)); // 期限順固定
+    const title = document.createElement("span");
+    title.textContent = `${item.name} (${item.category})`;
 
-    foodList.innerHTML = "";
-    filtered.forEach((item, index) => {
-      const li = document.createElement("li");
-      li.className = "food-item";
+    const status = document.createElement("span");
+    status.className = "food-status";
+    status.textContent = getStatus(item.date);
 
-      const info = document.createElement("div");
-      info.className = "food-info";
-      info.innerHTML = `
-        <strong>${item.name}</strong>（${item.category}）<br/>
-        <span class="food-expiry ${getExpiryClass(item.date)}">${formatDate(
-        item.date
-      )}</span>
-      `;
+    info.appendChild(title);
+    info.appendChild(status);
 
-      const del = document.createElement("button");
-      del.innerHTML = "🗑️";
-      del.className = "delete-btn";
-      del.addEventListener("click", () => {
-        deleteItem(index);
-      });
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete-btn";
+    delBtn.innerHTML = "🗑️";
+    delBtn.addEventListener("click", () => deleteItem(index));
 
-      li.appendChild(info);
-      li.appendChild(del);
-      foodList.appendChild(li);
+    li.appendChild(info);
+    li.appendChild(delBtn);
+    list.appendChild(li);
+  });
+
+  checkAndNotify();
+}
+
+function deleteItem(index) {
+  const items = getItems();
+  items.splice(index, 1);
+  localStorage.setItem("foods", JSON.stringify(items));
+  renderItems();
+}
+
+function getStatus(dateStr) {
+  const today = new Date();
+  const expiry = new Date(dateStr);
+  expiry.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
+
+  const diff = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
+  if (diff < 0) return "期限切れ";
+  if (diff === 0) return "本日まで";
+  return `あと${diff}日`;
+}
+
+function loadItemsFromStorage() {
+  renderItems();
+}
+
+// 通知の許可をリクエスト
+function requestNotificationPermission() {
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        checkAndNotify();
+      }
     });
   }
+}
 
-  function deleteItem(index) {
-    const items = getItems();
-    items.splice(index, 1);
-    localStorage.setItem("foodItems", JSON.stringify(items));
-    renderItems();
-  }
+// 通知を送る
+function checkAndNotify() {
+  if (Notification.permission !== "granted") return;
 
-  function getExpiryClass(dateStr) {
-    const today = new Date();
-    const expiry = new Date(dateStr);
+  const items = getItems();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  items.forEach(item => {
+    const expiry = new Date(item.date);
+    expiry.setHours(0,0,0,0);
     const diff = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
 
-    if (diff < 0) return "expired";
-    if (diff === 0) return "due-today";
-    return "";
-  }
-
-  function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split("-");
-    return `${year}年${month}月${day}日`;
-  }
-
-  renderItems();
-});
+    if (diff < 0 || diff === 0) {
+      new Notification("📢 食材アラート", {
+        body: `「${item.name}」は${diff === 0 ? "本日まで" : "期限切れ"}です`
+      });
+    }
+  });
+}
