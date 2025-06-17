@@ -1,70 +1,28 @@
-body {
-  font-family: "Arial", sans-serif;
-  background-color: #1a1a1a;
-  color: #f0f0f0;
-  margin: 0;
-  padding: 20px;
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SaveEats - 食材管理アプリ</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>SaveEats - 食材管理</h1>
 
-.container {
-  max-width: 600px;
-  margin: auto;
-}
+    <form id="item-form">
+      <input type="text" id="item-name" placeholder="食品名" required />
+      <input type="date" id="item-date" required />
+      <div class="category-box">
+        <select id="item-category"></select>
+        <button type="button" id="add-category-btn">＋</button>
+        <button type="button" id="remove-category-btn">−</button>
+      </div>
+      <button type="submit">追加</button>
+    </form>
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #00d1b2;
-}
-
-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-input, select, button {
-  padding: 10px;
-  font-size: 16px;
-}
-
-#item-name {
-  flex: 2;
-}
-
-#item-date {
-  flex: 2;
-}
-
-#item-category {
-  flex: 1;
-}
-
-button[type="submit"] {
-  flex: 1;
-  background-color: #00d1b2;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.item {
-  background-color: #2a2a2a;
-  border-left: 4px solid #00d1b2;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  position: relative;
-}
-
-.item .delete-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  color: #ff4d4d;
-  font-size: 18px;
-  cursor: pointer;
-}
+    <div id="items"></div>
+  </div>
+</body>
+</html>
