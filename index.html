@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Save Eats</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SaveEats - 食材管理アプリ</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-container">
-    <h1>Save Eats</h1>
+  <div class="container">
+    <h1>🍱 SaveEats</h1>
     <form id="food-form">
-      <input type="text" id="food-name" placeholder="食品名" required />
-      <input type="date" id="expiry-date" required />
+      <input type="text" id="food-name" placeholder="食品名" required>
+      <input type="date" id="food-date" required>
+      <select id="food-category">
+        <option value="冷蔵">冷蔵</option>
+        <option value="冷凍">冷凍</option>
+        <option value="常温">常温</option>
+      </select>
       <button type="submit">追加</button>
     </form>
-    <ul id="item-list"></ul>
+
+    <input type="text" id="search-bar" placeholder="食品を検索">
+
+    <div id="alert-box"></div>
+
+    <ul id="food-list"></ul>
   </div>
+
   <script src="main.js"></script>
 </body>
 </html>
