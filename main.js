@@ -1,89 +1,84 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.querySelector("form");
+  const form = document.getElementById("itemForm");
   const nameInput = document.getElementById("name");
   const dateInput = document.getElementById("date");
-  const categorySelect = document.getElementById("category");
-  const list = document.getElementById("itemList");
-  const sortBy = document.getElementById("sort");
+  const categoryInput = document.getElementById("category");
+  const itemList = document.getElementById("itemList");
+  const sortSelect = document.getElementById("sort");
 
-  form.addEventListener("submit", (e) => {
+  let items = JSON.parse(localStorage.getItem("items")) || [];
+
+  form.addEventListener("submit", e => {
     e.preventDefault();
     const name = nameInput.value.trim();
     const date = dateInput.value;
-    const category = categorySelect.value;
+    const category = categoryInput.value;
 
-    if (name && date) {
-      const item = { name, date, category };
-      saveItem(item);
-      addItemToDOM(item);
-      form.reset();
-    }
+    if (!name || !date) return;
+
+    items.push({ name, date, category });
+    saveAndRender();
+    form.reset();
   });
 
-  function saveItem(item) {
-    const items = JSON.parse(localStorage.getItem("items") || "[]");
-    items.push(item);
+  sortSelect.addEventListener("change", saveAndRender);
+
+  function saveAndRender() {
     localStorage.setItem("items", JSON.stringify(items));
+    renderItems();
   }
 
-  function loadItemsFromStorage() {
-    const items = JSON.parse(localStorage.getItem("items") || "[]");
-    renderItems(items);
-  }
+  function renderItems() {
+    itemList.innerHTML = "";
 
-  function renderItems(items) {
-    list.innerHTML = "";
-    const sorted = [...items].sort((a, b) => {
-      if (sortBy.value === "date") {
-        return new Date(a.date) - new Date(b.date);
-      } else if (sortBy.value === "category") {
-        return a.category.localeCompare(b.category);
+    const sorted = [...items];
+    if (sortSelect.value === "date") {
+      sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else {
+      sorted.sort((a, b) => a.category.localeCompare(b.category));
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    sorted.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "item";
+
+      const info = document.createElement("div");
+      info.className = "item-info";
+
+      const date = new Date(item.date);
+      date.setHours(0, 0, 0, 0);
+      const diff = Math.floor((date - today) / (1000 * 60 * 60 * 24));
+
+      let expireText = "";
+      if (diff < 0) {
+        expireText = "期限切れ";
+      } else if (diff === 0) {
+        expireText = "本日まで";
+      } else {
+        expireText = `あと${diff}日`;
       }
-      return 0;
+
+      info.innerHTML = `
+        <div><strong>${item.name}</strong> <span class="item-category">[${item.category}]</span></div>
+        <div class="item-expire">${item.date}（${expireText}）</div>
+      `;
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "🗑";
+      delBtn.className = "delete";
+      delBtn.addEventListener("click", () => {
+        items.splice(index, 1);
+        saveAndRender();
+      });
+
+      li.appendChild(info);
+      li.appendChild(delBtn);
+      itemList.appendChild(li);
     });
-
-    sorted.forEach(addItemToDOM);
   }
 
-  function addItemToDOM(item) {
-    const div = document.createElement("div");
-    div.className = "item";
-
-    const now = new Date();
-    const due = new Date(item.date);
-    const timeDiff = Math.floor((due - now) / (1000 * 60 * 60 * 24));
-    let status = "";
-    if (timeDiff < 0) status = "<span class='expired'>期限切れ</span>";
-    else if (timeDiff === 0) status = "<span class='warning'>本日まで</span>";
-    else status = `あと${timeDiff}日`;
-
-    div.innerHTML = `
-      <div class="item-info">
-        <strong>${item.name}</strong>（${status}）<br>
-        <span class="category">カテゴリ: ${item.category} / ${item.date.replace(/-/g, "/")}</span>
-      </div>
-      <button class="delete-btn" title="削除">&#128465;</button>
-    `;
-
-    div.querySelector(".delete-btn").addEventListener("click", () => {
-      deleteItem(item);
-      div.remove();
-    });
-
-    list.appendChild(div);
-  }
-
-  function deleteItem(targetItem) {
-    let items = JSON.parse(localStorage.getItem("items") || "[]");
-    items = items.filter(item =>
-      item.name !== targetItem.name ||
-      item.date !== targetItem.date ||
-      item.category !== targetItem.category
-    );
-    localStorage.setItem("items", JSON.stringify(items));
-  }
-
-  sortBy.addEventListener("change", loadItemsFromStorage);
-
-  loadItemsFromStorage();
+  renderItems();
 });
