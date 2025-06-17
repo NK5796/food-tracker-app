@@ -2,106 +2,82 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("item-form");
   const nameInput = document.getElementById("name");
   const dateInput = document.getElementById("date");
-  const categorySelect = document.getElementById("category");
+  const categoryInput = document.getElementById("category");
   const itemList = document.getElementById("item-list");
-  const newCategoryInput = document.getElementById("new-category-name");
-  const addCategoryBtn = document.getElementById("add-category");
-  const removeCategoryBtn = document.getElementById("remove-category");
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = nameInput.value;
-    const date = dateInput.value;
-    const category = categorySelect.value;
-    if (!name || !date || !category) return;
-
-    const item = { name, date, category };
-    saveItem(item);
-    nameInput.value = "";
-    dateInput.value = "";
-    categorySelect.value = "";
-  });
-
-  addCategoryBtn.addEventListener("click", () => {
-    const newCat = newCategoryInput.value.trim();
-    if (newCat && ![...categorySelect.options].some(opt => opt.value === newCat)) {
-      const opt = document.createElement("option");
-      opt.value = newCat;
-      opt.textContent = newCat;
-      categorySelect.appendChild(opt);
-      newCategoryInput.value = "";
-    }
-  });
-
-  removeCategoryBtn.addEventListener("click", () => {
-    const target = newCategoryInput.value.trim();
-    if (!target) return;
-    const options = [...categorySelect.options];
-    const toRemove = options.find(opt => opt.value === target);
-    if (toRemove) {
-      categorySelect.removeChild(toRemove);
-      newCategoryInput.value = "";
-    }
-  });
-
-  function saveItem(item) {
-    const items = JSON.parse(localStorage.getItem("items") || "[]");
-    items.push(item);
+  function saveItems(items) {
     localStorage.setItem("items", JSON.stringify(items));
-    renderItems();
   }
 
-  function renderItems() {
-    const items = JSON.parse(localStorage.getItem("items") || "[]");
-    items.sort((a, b) => new Date(a.date) - new Date(b.date));
-    itemList.innerHTML = "";
+  function loadItems() {
+    return JSON.parse(localStorage.getItem("items") || "[]");
+  }
 
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    return `${y}/${m}/${d}`;
+  }
+
+  function getRemainingText(dateStr) {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const exp = new Date(dateStr);
+    const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+
+    if (diff < 0) return "期限切れ";
+    if (diff === 0) return "本日まで";
+    return `あと${diff}日`;
+  }
+
+  function renderItems(items) {
+    itemList.innerHTML = "";
+    items.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     items.forEach((item, index) => {
       const li = document.createElement("li");
-      li.classList.add("item");
 
-      const itemDate = new Date(item.date);
-      itemDate.setHours(0, 0, 0, 0);
-      const diff = Math.floor((itemDate - today) / (1000 * 60 * 60 * 24));
-
-      let status = "";
-      if (diff < 0) status = "（期限切れ）";
-      else if (diff === 0) status = "（本日まで）";
-      else status = `（あと${diff}日）`;
-
-      const span = document.createElement("span");
-      span.innerHTML = `
-        <strong>${item.name}</strong> - ${item.category}<br>
-        ${formatDate(item.date)} ${status}
+      const info = document.createElement("div");
+      info.className = "item-info";
+      info.innerHTML = `
+        <strong>${item.name}</strong>（${item.category}）<br>
+        <span class="status">${formatDate(item.date)} - ${getRemainingText(item.date)}</span>
       `;
 
       const del = document.createElement("button");
-      del.classList.add("delete-btn");
+      del.className = "delete";
       del.innerHTML = "🗑️";
       del.onclick = () => {
-        deleteItem(index);
+        items.splice(index, 1);
+        saveItems(items);
+        renderItems(items);
       };
 
-      li.appendChild(span);
+      li.appendChild(info);
       li.appendChild(del);
       itemList.appendChild(li);
     });
   }
 
-  function formatDate(dateStr) {
-    const d = new Date(dateStr);
-    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-  }
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  function deleteItem(index) {
-    const items = JSON.parse(localStorage.getItem("items") || "[]");
-    items.splice(index, 1);
-    localStorage.setItem("items", JSON.stringify(items));
-    renderItems();
-  }
+    const newItem = {
+      name: nameInput.value,
+      date: dateInput.value,
+      category: categoryInput.value
+    };
 
-  renderItems();
+    const items = loadItems();
+    items.push(newItem);
+    saveItems(items);
+    renderItems(items);
+
+    nameInput.value = "";
+    dateInput.value = "";
+    categoryInput.value = "野菜";
+  });
+
+  renderItems(loadItems());
 });
