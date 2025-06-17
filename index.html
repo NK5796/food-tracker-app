@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SaveEats - 食材管理アプリ</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>🍱 SaveEats</h1>
-    <form id="food-form">
-      <input type="text" id="food-name" placeholder="食品名" required>
-      <input type="date" id="food-date" required>
-      <select id="food-category">
-        <option value="冷蔵">冷蔵</option>
-        <option value="冷凍">冷凍</option>
-        <option value="常温">常温</option>
+    <h1>SaveEats</h1>
+    <form id="foodForm">
+      <input type="text" id="foodName" placeholder="食品名" required />
+      <input type="date" id="expiryDate" required />
+      <select id="category">
+        <option value="すべて">カテゴリ</option>
+        <option value="肉類">肉類</option>
+        <option value="野菜">野菜</option>
+        <option value="乳製品">乳製品</option>
+        <option value="その他">その他</option>
       </select>
       <button type="submit">追加</button>
     </form>
 
-    <input type="text" id="search-bar" placeholder="食品を検索">
+    <div class="filter-section">
+      <input type="text" id="searchBar" placeholder="検索..." />
+      <select id="filterCategory">
+        <option value="すべて">すべて</option>
+        <option value="肉類">肉類</option>
+        <option value="野菜">野菜</option>
+        <option value="乳製品">乳製品</option>
+        <option value="その他">その他</option>
+      </select>
+      <select id="sortOrder">
+        <option value="期限昇順">期限が近い順</option>
+        <option value="期限降順">期限が遠い順</option>
+      </select>
+    </div>
 
-    <div id="alert-box"></div>
-
-    <ul id="food-list"></ul>
+    <ul id="foodList"></ul>
   </div>
-
   <script src="main.js"></script>
 </body>
 </html>
