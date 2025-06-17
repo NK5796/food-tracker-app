@@ -60,9 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.className = "food-item";
 
-      const today = new Date();
-      const expiry = new Date(item.date);
-      const diff = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const expiry = new Date(item.date);
+    expiry.setHours(0, 0, 0, 0);
+    const diff = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
       let status = "";
 
       if (diff < 0) status = "<span class='expired'>(期限切れ)</span>";
