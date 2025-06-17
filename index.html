@@ -2,27 +2,42 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SaveEats - 食材管理アプリ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaveEats - 食材管理</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="main.js" defer></script>
 </head>
 <body>
   <div class="container">
-    <h1>SaveEats</h1>
+    <h1>🥕 SaveEats </h1>
 
-    <form id="item-form">
-      <input type="text" id="item-name" placeholder="食品名" required />
-      <input type="date" id="item-date" required />
-      <div class="category-box">
-        <select id="item-category"></select>
-        <button type="button" id="add-category-btn">＋</button>
-        <button type="button" id="remove-category-btn">−</button>
-      </div>
+    <form id="itemForm">
+      <input type="text" id="itemName" placeholder="食品名" required />
+      <input type="date" id="expiryDate" required />
+      <select id="category">
+        <option value="野菜">野菜</option>
+        <option value="肉">肉</option>
+        <option value="魚">魚</option>
+        <option value="乳製品">乳製品</option>
+      </select>
       <button type="submit">追加</button>
     </form>
 
-    <div id="items"></div>
+    <div class="category-manager">
+      <input type="text" id="newCategoryInput" placeholder="新しいカテゴリ名" />
+      <button id="addCategoryBtn">カテゴリ追加</button>
+    </div>
+
+    <div id="sortOptions">
+      <label for="sortMethod">並べ替え：</label>
+      <select id="sortMethod">
+        <option value="expiry">期限が近い順</option>
+        <option value="category">カテゴリ順</option>
+      </select>
+    </div>
+
+    <ul id="itemList"></ul>
   </div>
+
+  <script src="main.js"></script>
 </body>
 </html>
