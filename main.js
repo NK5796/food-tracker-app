@@ -1,30 +1,49 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("item-form");
-  const nameInput = document.getElementById("item-name");
-  const dateInput = document.getElementById("item-date");
-  const categoryInput = document.getElementById("item-category");
-  const itemsContainer = document.getElementById("items");
+  const itemForm = document.getElementById("itemForm");
+  const itemList = document.getElementById("itemList");
+  const categorySelect = document.getElementById("category");
+  const newCategoryInput = document.getElementById("newCategory");
+  const addCategoryBtn = document.getElementById("addCategory");
+  const removeCategoryBtn = document.getElementById("removeCategory");
 
-  form.addEventListener("submit", (e) => {
+  itemForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const item = {
-      name: nameInput.value.trim(),
-      date: dateInput.value,
-      category: categoryInput.value
-    };
-    saveItem(item);
-    renderItems();
-    form.reset();
+    const name = document.getElementById("name").value;
+    const date = document.getElementById("date").value;
+    const category = categorySelect.value;
+
+    if (name && date) {
+      const item = { name, date, category };
+      saveItem(item);
+      renderItems();
+      itemForm.reset();
+    }
+  });
+
+  addCategoryBtn.addEventListener("click", () => {
+    const newCat = newCategoryInput.value.trim();
+    if (newCat && !Array.from(categorySelect.options).some(opt => opt.value === newCat)) {
+      const option = document.createElement("option");
+      option.value = newCat;
+      option.textContent = newCat;
+      categorySelect.appendChild(option);
+      newCategoryInput.value = "";
+    }
+  });
+
+  removeCategoryBtn.addEventListener("click", () => {
+    const selected = categorySelect.value;
+    if (["野菜", "肉"].includes(selected)) return;
+    categorySelect.querySelector(`option[value="${selected}"]`)?.remove();
   });
 
   function saveItem(item) {
     const items = JSON.parse(localStorage.getItem("items") || "[]");
     items.push(item);
-    items.sort((a, b) => new Date(a.date) - new Date(b.date));
     localStorage.setItem("items", JSON.stringify(items));
   }
 
-  function getRemainingDays(dateStr) {
+  function getDaysLeft(dateStr) {
     const today = new Date();
     const target = new Date(dateStr);
     const diff = Math.floor((target - today) / (1000 * 60 * 60 * 24));
@@ -33,41 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderItems() {
     const items = JSON.parse(localStorage.getItem("items") || "[]");
-    itemsContainer.innerHTML = "";
+    items.sort((a, b) => new Date(a.date) - new Date(b.date));
+    itemList.innerHTML = "";
 
     items.forEach((item, index) => {
-      const div = document.createElement("div");
-      div.className = "item";
+      const li = document.createElement("li");
+      li.className = "item";
 
-      const remaining = getRemainingDays(item.date);
-      let status = "";
-      if (remaining < 0) {
-        status = "【期限切れ】";
-      } else if (remaining === 0) {
-        status = "【本日まで】";
-      } else {
-        status = `【あと${remaining}日】`;
-      }
+      const days = getDaysLeft(item.date);
+      let msg = "";
+      if (days < 0) msg = "期限切れ";
+      else if (days === 0) msg = "本日まで";
+      else msg = `あと ${days} 日`;
 
-      div.innerHTML = `
-        <strong>${item.name}</strong>（${item.category}）<br>
-        消費期限：${item.date} ${status}
-        <button class="delete-btn" data-index="${index}">🗑</button>
+      li.innerHTML = `
+        <span>${item.name} (${item.category})</span>
+        <span class="days-left">${msg}</span>
       `;
 
-      div.querySelector(".delete-btn").addEventListener("click", () => {
-        deleteItem(index);
-      });
-
-      itemsContainer.appendChild(div);
+      itemList.appendChild(li);
     });
-  }
-
-  function deleteItem(index) {
-    const items = JSON.parse(localStorage.getItem("items") || "[]");
-    items.splice(index, 1);
-    localStorage.setItem("items", JSON.stringify(items));
-    renderItems();
   }
 
   renderItems();
