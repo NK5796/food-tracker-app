@@ -1,20 +1,24 @@
 body {
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: #121212;
-  color: #f5f5f5;
+  font-family: Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  padding: 20px;
   margin: 0;
-  padding: 0;
 }
 
 .container {
   max-width: 600px;
   margin: auto;
+  background: #2c2c2c;
   padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  color: #ffffff;
 }
 
 form {
@@ -24,75 +28,72 @@ form {
   margin-bottom: 15px;
 }
 
-form input,
-form select {
-  flex: 1 1 40%;
+form input, form select, form button {
+  font-size: 16px;
   padding: 10px;
   border-radius: 6px;
   border: none;
+}
+
+form input, form select {
+  flex: 1 1 45%;
+  background-color: #444;
+  color: #fff;
 }
 
 form button {
-  flex: 1 1 100%;
-  padding: 10px;
   background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 6px;
+  color: #fff;
   cursor: pointer;
+  flex: 1 1 100%;
 }
 
-.sort-area {
-  text-align: center;
-  margin-bottom: 10px;
+form button:hover {
+  background-color: #005bb5;
 }
 
-#food-list {
+.sort-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.sort-bar select {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+}
+
+ul {
   list-style: none;
   padding: 0;
 }
 
-.food-item {
-  background: #1e1e1e;
+li {
+  background-color: #3a3a3a;
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.food-info {
-  display: flex;
-  flex-direction: column;
+li span {
+  display: block;
 }
 
-.expired {
-  color: #ff6b6b;
-}
-
-.today {
-  color: #ffc107;
-}
-
-.soon {
-  color: #00d084;
-}
-
-.delete-btn {
-  background: none;
+.remove-button {
+  background: transparent;
   border: none;
+  color: #ff6b6b;
   font-size: 18px;
-  color: #bbb;
   cursor: pointer;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  text-align: center;
-  line-height: 32px;
 }
 
-.delete-btn:hover {
-  background-color: #333;
-  color: #fff;
+.remove-button:hover {
+  color: #ff1c1c;
 }
