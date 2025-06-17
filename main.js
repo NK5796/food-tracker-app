@@ -1,78 +1,88 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('item-form');
-  const nameInput = document.getElementById('name');
-  const dateInput = document.getElementById('date');
-  const list = document.getElementById('item-list');
+// main.js
 
-  loadItemsFromStorage();
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("form");
+  const nameInput = document.getElementById("food-name");
+  const dateInput = document.getElementById("expiry-date");
+  const foodList = document.getElementById("food-list");
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     const name = nameInput.value.trim();
-    const date = dateInput.value;
-
-    if (!name || !date) return;
-
-    const item = { name, date };
-    addItemToDOM(item);
-    saveItem(item);
-
-    form.reset();
+    const expiry = dateInput.value;
+    if (name && expiry) {
+      addItem({ name, expiry });
+      nameInput.value = "";
+      dateInput.value = "";
+    }
   });
 
-  function addItemToDOM(item) {
-    const li = document.createElement('li');
+  function addItem(item) {
+    const items = getItems();
+    items.push(item);
+    saveItems(items);
+    renderItems(items);
+  }
 
-    const today = new Date();
-    const itemDate = new Date(item.date);
-    const diff = Math.floor((itemDate - today) / (1000 * 60 * 60 * 24));
-    let status = '';
+  function deleteItem(index) {
+    const items = getItems();
+    items.splice(index, 1);
+    saveItems(items);
+    renderItems(items);
+  }
 
-    if (diff < 0) {
-      status = '❌ 期限切れ';
-    } else if (diff === 0) {
-      status = '⚠️ 本日まで';
-    } else {
-      status = `📅 あと${diff}日`;
-    }
+  function getItems() {
+    return JSON.parse(localStorage.getItem("foods")) || [];
+  }
 
-    li.innerHTML = `
-      <div>
-        <strong>${item.name}</strong><br>
-        <span class="status">${formatDate(item.date)} - ${status}</span>
-      </div>
-      <button class="delete" title="削除">🗑</button>
-    `;
-
-    li.querySelector('.delete').addEventListener('click', () => {
-      li.remove();
-      deleteItem(item);
-    });
-
-    list.appendChild(li);
+  function saveItems(items) {
+    localStorage.setItem("foods", JSON.stringify(items));
   }
 
   function formatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
+    const [year, month, day] = dateStr.split("-");
     return `${year}年${month}月${day}日`;
   }
 
-  function saveItem(item) {
-    const items = JSON.parse(localStorage.getItem('items') || '[]');
-    items.push(item);
-    localStorage.setItem('items', JSON.stringify(items));
-  }
+  function renderItems(items) {
+    foodList.innerHTML = "";
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  function deleteItem(item) {
-    const items = JSON.parse(localStorage.getItem('items') || '[]');
-    const updated = items.filter(i => !(i.name === item.name && i.date === item.date));
-    localStorage.setItem('items', JSON.stringify(updated));
+    // 日付順でソート
+    items.sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
+
+    items.forEach((item, index) => {
+      const li = document.createElement("li");
+      const expiry = new Date(item.expiry);
+      expiry.setHours(0, 0, 0, 0);
+      const remaining = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
+
+      let status = "";
+      if (remaining < 0) status = "期限切れ";
+      else if (remaining === 0) status = "本日まで";
+      else status = `あと${remaining}日`;
+
+      const info = document.createElement("span");
+      info.textContent = `${item.name}（${formatDate(item.expiry)}） - ${status}`;
+      if (status === "期限切れ") info.classList.add("expired");
+      else if (status === "本日まで") info.classList.add("due-today");
+
+      const delBtn = document.createElement("button");
+      delBtn.className = "delete-btn";
+      delBtn.innerHTML = '<i class="fas fa-trash"></i>';
+      delBtn.addEventListener("click", () => deleteItem(index));
+
+      li.appendChild(info);
+      li.appendChild(delBtn);
+      foodList.appendChild(li);
+    });
   }
 
   function loadItemsFromStorage() {
-    const items = JSON.parse(localStorage.getItem('items') || '[]');
-    // 期限順でソート
-    items.sort((a, b) => new Date(a.date) - new Date(b.date));
-    items.forEach(addItemToDOM);
+    const items = getItems();
+    renderItems(items);
   }
+
+  loadItemsFromStorage();
 });
